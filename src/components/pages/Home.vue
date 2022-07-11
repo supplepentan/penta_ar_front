@@ -1,4 +1,10 @@
+<script setup>
+import AppHere from "../parts/AppHere.vue";
+</script>
 <template>
+  <div>
+    <AppHere />
+  </div>
   <section>
     <div class="relative items-center w-full px-5 py-12 mx-auto md:px-12 lg:px-24 max-w-7xl">
       <div class="grid w-full grid-cols-1 gap-6 mx-auto lg:grid-cols-3">
@@ -7,8 +13,9 @@
             <img class="object-cover object-center w-full mb-8 lg:h-48 md:h-36 rounded-xl"
               src="../../assets/img/home_image_01.jpg" alt="blog">
 
-            <h1 class="mx-auto mb-8 text-2xl font-semibold leading-none tracking-tighter text-neutral-600 lg:text-3xl">
-              AR <span class="text-base">by AI technology</span></h1>
+            <h1
+              class="mx-auto mb-8 text-2xl font-semibold leading-none tracking-tighter hover:text-white text-neutral-600 lg:text-3xl">
+              AR Files <span class="text-base">by AI technology</span></h1>
           </a>
           <p class="mx-auto text-base leading-relaxed text-gray-500">Creating an AR-object using AI.</p>
 
@@ -22,7 +29,8 @@
             <img class="object-cover object-center w-full mb-8 lg:h-48 md:h-36 rounded-xl"
               src="../../assets/img/home_image_02.png" alt="blog">
 
-            <h1 class="mx-auto mb-8 text-2xl font-semibold leading-none tracking-tighter text-neutral-600 lg:text-3xl">
+            <h1
+              class="mx-auto mb-8 text-2xl font-semibold leading-none tracking-tighter hover:text-white text-neutral-600 lg:text-3xl">
               APNG <span class="text-base">by Automation</span></h1>
           </a>
           <p class="mx-auto text-base leading-relaxed text-gray-500">
@@ -38,7 +46,8 @@
             <img class="object-cover object-center w-full mb-8 lg:h-48 md:h-36 rounded-xl"
               src="../../assets/img/home_image_03.jpg" alt="blog">
 
-            <h1 class="mx-auto mb-8 text-2xl font-semibold leading-none tracking-tighter text-neutral-600 lg:text-3xl">
+            <h1
+              class="mx-auto mb-8 text-2xl font-semibold leading-none tracking-tighter hover:text-white text-neutral-600 lg:text-3xl">
               Camera App <span class="text-base">of AR world</span></h1>
           </a>
           <p class="mx-auto text-base leading-relaxed text-gray-500">
@@ -53,7 +62,3 @@
     </div>
   </section>
 </template>
-
-<script>
-export default {};
-</script>

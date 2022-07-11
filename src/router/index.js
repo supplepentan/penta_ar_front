@@ -5,6 +5,7 @@ import Apng from "../components/pages/Apng.vue";
 import Ar from "../components/pages/Ar.vue";
 import CameraApp from "../components/pages/CameraApp.vue";
 import Home from "../components/pages/Home.vue";
+import Three from "../components/pages/Three.vue";
 
 const routes = [
     {
@@ -31,6 +32,11 @@ const routes = [
         path: "/about",
         name: "About",
         component: About,
+    },
+    {
+        path: "/three",
+        name: "Three",
+        component: Three,
     },
 ];
 

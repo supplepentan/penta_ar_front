@@ -8,7 +8,6 @@ import PostBack from "../parts/PostBack.vue";
         <div class="relative inline-flex items-center mx-auto align-middle">
           <div class="text-center">
             <div class="flex flex-wrap p-12 mx-auto md:flex-nowrap">
-
               <div class="flex w-full">
                 <div
                   class="relative flex flex-col items-start m-1 transition duration-300 ease-in-out delay-150 transform bg-white shadow-2xl rounded-xl md:w-80 md:-ml-16 md:hover:-translate-x-16 md:hover:-translate-y-8">
@@ -18,9 +17,9 @@ import PostBack from "../parts/PostBack.vue";
                     <h4 class="mt-4 text-2xl font-semibold text-neutral-600">
                       <span class="">AR Marker Maker</span>
                     </h4>
-                    <p class="mt-4 text-base font-normal text-gray-500 leading-relax">Install Tailwind CSS without any
-                      Javascript Framewrok locally with purgeCSS, enable the dark mode option, prefferences or class
-                      is upt to you.</p>
+                    <p class="mt-4 text-base font-normal text-gray-500 leading-relax">Image file you want choice can be
+                      AR markers. </p>
+                    <PostBack buckendUrl="http://192.168.0.29:8000/ar/marker_maker" />
                   </div>
                 </div>
               </div>
@@ -37,7 +36,7 @@ import PostBack from "../parts/PostBack.vue";
                     <p class="mt-4 text-base font-normal text-gray-500 leading-relax">Extract the face region from the
                       image
                       (jpg, png). Using extructed face image, can make the AR-Marker. </p>
-                    <PostBack buckendUrl="http://127.0.0.1:8000/ar/face_extruct" />
+                    <PostBack buckendUrl="http://192.168.0.29:8000/ar/face_extruct" />
                   </div>
                 </div>
               </div>
@@ -51,14 +50,10 @@ import PostBack from "../parts/PostBack.vue";
                     <h4 class="mt-4 text-2xl font-semibold text-neutral-600">
                       <span class="">3D Object Maker</span>
                     </h4>
-                    <p class="mt-4 text-base font-normal text-gray-500 leading-relax">Install Tailwind CSS without any
-                      Javascript Framewrok locally with purgeCSS, enable the dark mode option, prefferences or class
-                      is upt to you.</p>
+                    <p class="mt-4 text-base font-normal text-gray-500 leading-relax">Coming soon.</p>
                   </div>
                 </div>
               </div>
-
-
             </div>
           </div>
         </div>

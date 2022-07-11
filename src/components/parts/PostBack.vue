@@ -39,9 +39,13 @@ const fileUpload = () => {
 </script>
 <template>
   <img v-bind:src="previewImage" class="img-fluid" alt="" />
-  <input type="file" v-on:change="fileSelected" />
+  <label
+    class="px-4 py-2 bg-transparent border-blue-500 rounded bg-sky-200 ring-2 hover:bg-blue-300 hover:text-white hover:border-transparent">
+    Select File !
+    <input class="hidden" type="file" v-on:change="fileSelected" />
+  </label>
   <button v-on:click="fileUpload"
-    class="px-4 py-2 font-semibold text-blue-700 bg-transparent bg-blue-100 border border-blue-500 rounded hover:bg-blue-300 hover:text-white hover:border-transparent">
+    class="px-4 py-2 font-semibold text-blue-700 bg-transparent bg-blue-100 border-blue-500 rounded ring-2 hover:bg-blue-300 hover:text-white hover:border-transparent">
     Make It !
   </button>
 </template>

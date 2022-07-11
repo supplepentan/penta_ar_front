@@ -2,6 +2,7 @@
 //https://github.com/davidmz/apng-js
 import parseAPNG from 'apng-js';
 import { onMounted, ref } from 'vue';
+import PostBack from "../parts/PostBack.vue";
 const canvas = ref();
 const ctx = ref();
 const frameNum = ref([]);
@@ -41,16 +42,17 @@ const getImage = () => {
               class="max-w-5xl text-2xl font-bold leading-none tracking-tighter text-neutral-600 md:text-5xl lg:text-6xl lg:max-w-7xl">
               APNG Analyzer
             </h1>
+            <PostBack buckendUrl="http://127.0.0.1:8000/apng/apng_make" />
+            <div class="mt-3 rounded-lg sm:mt-0">
+              <input type="file" v-on:change="fileSelected"
+                class="px-5 py-4 text-base font-medium text-center text-white transition duration-500 ease-in-out transform bg-neutral-400 lg:px-10 rounded-xl hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" />
+            </div>
             <br class="hidden lg:block" />
-            <canvas id="canvas" width="640" height="420"
+            <canvas id="canvas" class="rounded-lg" width="640" height="420"
               style="border:1px solid #000000; max-width: 100%; height: auto; max-height: 100%">
             </canvas>
             <p class="max-w-xl mx-auto mt-8 text-base leading-relaxed text-gray-500">Select aping file</p>
             <div class="flex justify-center w-full max-w-2xl gap-2 mx-auto mt-6">
-              <div class="mt-3 rounded-lg sm:mt-0">
-                <input type="file" v-on:change="fileSelected"
-                  class="px-5 py-4 text-base font-medium text-center text-white transition duration-500 ease-in-out transform bg-blue-600 lg:px-10 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" />
-              </div>
               <div class="mt-3 rounded-lg sm:mt-0 sm:ml-3">
                 <button @click="getImage"
                   class="items-center block px-5 lg:px-10 py-3.5 text-base font-medium text-center text-blue-600 transition duration-500 ease-in-out transform border-2 border-white shadow-md rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
