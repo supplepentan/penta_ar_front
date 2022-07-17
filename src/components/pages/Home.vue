@@ -1,5 +1,13 @@
 <script setup>
+import { onMounted, onUpdated } from "vue";
 import AppHere from "../parts/AppHere.vue";
+onMounted(() => {
+  console.log("MOUNTED")
+});
+onUpdated(() => {
+  console.log("UPDATED")
+});
+
 </script>
 <template>
   <div>

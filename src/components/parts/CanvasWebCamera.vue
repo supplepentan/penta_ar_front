@@ -1,7 +1,8 @@
 <script setup>
 import parseAPNG from 'apng-js';
 import { onMounted, ref } from 'vue';
-const containerCanvas = ref();
+const containerCanvasWidth = ref();
+const containerCanvasHeight = ref();
 const width = ref(window.innerWidth); //ブラウザの横の長さ
 const height = ref(window.innerHeight);
 const apng = ref();
@@ -11,6 +12,9 @@ const ctxPhotoframe = ref();
 const photoFrame_x = ref();
 const photoFrame_y = ref();
 onMounted(() => {
+  containerCanvasWidth.value = document.getElementById("containerCanvas").clientWidth;
+  containerCanvasHeight.value = document.getElementById("containerCanvas").clientHeight;
+  console.log(containerCanvas);
   //webcamera
   const video = document.getElementById("video")
   navigator.mediaDevices.getUserMedia({
@@ -91,20 +95,22 @@ const frameStop = () => {
 }
 </script>
 <template>
+  {{ clientWidth }}
   <div>
     <input type="file" v-on:change="fileSelected">
-    <div ref="containerCanvas" class="relative flex ">
-      <div class="relative flex-1 ">
-        <canvas width="600" height="300" class="absolute flex-1 rounded ring-2" id="canvasMain"></canvas>
-        <canvas width="600" height="300" class="absolute flex-1 rounded ring-2" id="canvasPhotoframe"
+    <div id="containerCanvas" class="relative flex items-stretch">
+      <div class="relative justify-center flex-1">
+        <canvas v-bind:width="width / 3" v-bind:height="width / 3" class="absolute rounded ring-2"
+          id="canvasMain"></canvas>
+        <canvas v-bind:width="width / 3" v-bind:height="width / 3" class="absolute rounded ring-2" id="canvasPhotoframe"
           v-on:mousemove="position"></canvas>
       </div>
       <div class="flex-1 ">
-        <canvas width="600" height="300" class="flex-1 rounded ring-2" id="canvasConcat"></canvas>
+        <canvas v-bind:width="width / 3" v-bind:height="width / 3" class="rounded ring-2" id="canvasConcat"></canvas>
       </div>
     </div>
   </div>
-  {{ containerCanvas }}
+  <div>{{ containerCanvas }}</div>
   <div class="flex items-stretch">
     <button type="button" class="flex-1 block p-2 rounded bg-neutral-200 ring-2" @click="getImage">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-camera"
@@ -133,7 +139,7 @@ const frameStop = () => {
   <div>
     <p>X: {{ photoFrame_x }} Y: {{ photoFrame_y }}</p>
   </div>
-  <div hidden>
+  <div class="invisible">
     <video id="video"></video>
   </div>
 </template>
