@@ -2,6 +2,7 @@
 //https://github.com/davidmz/apng-js
 import parseAPNG from 'apng-js';
 import { onMounted, ref } from 'vue';
+import ColorPicker from "../parts/ColorPicker.vue";
 import PostBack from "../parts/PostBack.vue";
 const canvas = ref();
 const ctx = ref();
@@ -35,13 +36,13 @@ const getImage = () => {
 const tabSelect = ref("apng_maker");
 const onApngMaker = () => {
   tabSelect.value = "apng_maker";
-  console.log(tabSelect);
 };
 const onApngAnalyzer = () => {
   tabSelect.value = "apng_analyzer";
 };
 </script>
 <template>
+  <ColorPicker />
   {{ tabSelect }}
   <section>
     <div class="flex items-center justify-center">

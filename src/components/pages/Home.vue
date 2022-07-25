@@ -18,7 +18,8 @@ onUpdated(() => {
       <div class="grid w-full grid-cols-1 gap-6 mx-auto lg:grid-cols-3">
         <div class="p-6">
           <a href="/ar">
-            <img class="object-cover object-center w-full mb-8 lg:h-48 md:h-36 rounded-xl"
+            <img
+              class="object-cover object-center w-full mb-8 ring-2 hover:ring-4 ring-slate-300 lg:h-48 md:h-36 rounded-xl"
               src="../../assets/img/home_image_01.jpg" alt="blog">
 
             <h1
@@ -34,7 +35,7 @@ onUpdated(() => {
         </div>
         <div class="p-6">
           <a href="/apng">
-            <img class="object-cover object-center w-full mb-8 lg:h-48 md:h-36 rounded-xl"
+            <img class="object-cover object-center w-full mb-8 hover:animate-bounce lg:h-48 md:h-36 rounded-xl"
               src="../../assets/img/home_image_02.png" alt="blog">
 
             <h1
@@ -51,7 +52,8 @@ onUpdated(() => {
         </div>
         <div class="p-6">
           <a href="/camera_app">
-            <img class="object-cover object-center w-full mb-8 lg:h-48 md:h-36 rounded-xl"
+            <img
+              class="object-cover object-center w-full mb-8 ring-2 hover:ring-4 ring-slate-300 lg:h-48 md:h-36 rounded-xl"
               src="../../assets/img/home_image_03.jpg" alt="blog">
 
             <h1
