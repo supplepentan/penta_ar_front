@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 
-const emits = defineEmits(["emitInfoColor"]);
+const emits = defineEmits(["emitFileImage", "emitInfoColor"]);
 const canvas = ref();
 const ctx = ref();
 function draw(canvas, imgagePath) {
@@ -24,6 +24,7 @@ const file = ref();
 const previewImage = ref();
 const fileSelected = (event) => {
   file.value = event.target.files[0];
+  emits("emitFileImage", file.value);
   const reader = new FileReader();
   reader.onload = () => {
     previewImage.value = reader.result;
