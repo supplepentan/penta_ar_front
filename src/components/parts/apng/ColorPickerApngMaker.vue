@@ -45,14 +45,16 @@ const fileSelected = (event) => {
 };
 </script>
 <template>
-  <div v-if="file">
-    <canvas v-on:click="pick" class="border " width="200" height="200" id="pickcanvas"></canvas>
-  </div>
-  <div>
-    <label
-      class="px-4 py-2 bg-transparent border-blue-500 rounded cursor-pointer bg-sky-200 ring-2 hover:bg-blue-300 hover:text-white hover:border-transparent">
-      Select File !
-      <input class="hidden" type="file" v-on:change="fileSelected" />
-    </label>
+  <div class="">
+    <div class="flex flex-row " v-if="file">
+      <canvas v-on:click="pick" class="border " width="200" height="200" id="pickcanvas"></canvas>
+    </div>
+    <div class="flex flex-row justify-center">
+      <label
+        class="px-4 py-2 bg-transparent border-blue-500 rounded cursor-pointer bg-sky-200 ring-2 hover:bg-blue-300 hover:text-white hover:border-transparent">
+        Select File !
+        <input class="hidden" type="file" v-on:change="fileSelected" />
+      </label>
+    </div>
   </div>
 </template>

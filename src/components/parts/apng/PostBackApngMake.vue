@@ -31,7 +31,6 @@ const fileUpload = () => {
 };
 </script>
 <template>
-  {{ props.colorInfo }}
   <button v-on:click="fileUpload"
     class="px-4 py-2 font-semibold text-blue-700 bg-transparent bg-blue-100 border-blue-500 rounded ring-2 hover:bg-blue-300 hover:text-white hover:border-transparent">
     Make It !
