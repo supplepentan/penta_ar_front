@@ -85,32 +85,56 @@ const download = () => {
   linkConcat.download = 'export_image_wrap.png';
   linkConcat.click();
 
-}
+};
 const position = (event) => {
   photoFrame_x.value = event.screenX;
   photoFrame_y.value = event.screenY
-}
+};
 const frameStop = () => {
   console.log("ここ", player);
+};
+//canvasStamp
+const onStamp = () => {
+  let imgStamp = new Image();
+  imgStamp.onload = function () {
+    let canvasStamp = document.querySelector('#canvasStamp');
+    let ctxStamp = canvasStamp.getContext('2d');
+    ctxStamp.drawImage(imgStamp, 0, 0);
+  }
+  imgStamp.src = "/supplepentan-favicon.png"
+
 }
 </script>
 <template>
   {{ clientWidth }}
   <div>
-    <input type="file" v-on:change="fileSelected">
-    <div id="containerCanvas" class="relative flex items-stretch">
-      <div class="relative justify-center flex-1">
+    <div id="containerCanvas" class="grid grid-cols-2 gap-4 py-2">
+      <div class="relative flex justify-center py-2">
         <canvas v-bind:width="width / 3" v-bind:height="width / 3" class="absolute rounded ring-2"
           id="canvasMain"></canvas>
         <canvas v-bind:width="width / 3" v-bind:height="width / 3" class="absolute rounded ring-2" id="canvasPhotoframe"
           v-on:mousemove="position"></canvas>
+        <canvas v-bind:width="width / 3" v-bind:height="width / 3" class="absolute rounded ring-2"
+          id="canvasStamp"></canvas>
       </div>
-      <div class="flex-1 ">
+      <div class="flex justify-center py-2">
         <canvas v-bind:width="width / 3" v-bind:height="width / 3" class="rounded ring-2" id="canvasConcat"></canvas>
       </div>
     </div>
   </div>
   <div>{{ containerCanvas }}</div>
+  <div class="grid grid-cols-2 border-2">
+    <div class="p-2 border-2 rounded border-sky-400">
+      <p class="text-center">Photoframe</p>
+      <input type="file" v-on:change="fileSelected">
+    </div>
+    <div class="p-2 border-2 rounded border-sky-400">
+      <p class="text-center border">Stamp</p>
+      <div>
+        <img src="../../assets/img/supplepentan-favicon.png" alt="" v-on:click="onStamp">
+      </div>
+    </div>
+  </div>
   <div class="flex items-stretch">
     <button type="button" class="flex-1 block p-2 rounded bg-neutral-200 ring-2" @click="getImage">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-camera"

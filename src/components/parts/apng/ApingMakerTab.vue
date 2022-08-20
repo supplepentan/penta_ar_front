@@ -21,14 +21,21 @@ const infoColorEmits = (data) => {
       <div class="flex flex-row justify-center py-2">
         <ColorPickerApngMaker @emitFileImage="fileImageEmits" @emitInfoColor="infoColorEmits" />
       </div>
-      <div class="py-4 bg-gray-200">
-        <div class="flex flex-row justify-center border-4 border-zinc-800">
-          <p class="p-2 mx-2 border-2 rounded flex1">Red: {{ colorInfo[0] }}</p>
-          <p class="p-2 mx-2 border-2 rounded flex1">Green: {{ colorInfo[1] }}</p>
-          <p class="p-2 mx-2 border-2 rounded flex1">Blue: {{ colorInfo[2] }}</p>
+      <div class="w-64 mx-auto bg-gray-200 border-4 rounded-lg py- border-sky-200">
+        <div class="flex flex-row justify-center">
+          <p class="p-2 mx-2 text-center border-2 rounded flex1"><span class="font-bold">Red</span><br /> {{
+              colorInfo[0]
+          }}
+          </p>
+          <p class="p-2 mx-2 text-center border-2 rounded flex1"><span class="font-bold">Green</span><br /> {{
+              colorInfo[1]
+          }}</p>
+          <p class="p-2 mx-2 text-center border-2 rounded flex1"><span class="font-bold">Blue</span><br />{{
+              colorInfo[2]
+          }}</p>
         </div>
-        <div class="flex justify-center py-2 border-4 border-zinc-800">
-          <p class="text-center">Alpha: {{ colorInfo[3] }}</p>
+        <div class="flex justify-center pb-2 ">
+          <p class="text-center"><span class="font-bold">Alpha</span><br />{{ colorInfo[3] }}</p>
         </div>
       </div>
       <div class="flex flex-row justify-center py-2">
