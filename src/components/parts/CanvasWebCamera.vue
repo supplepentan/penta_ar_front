@@ -1,5 +1,6 @@
 <script setup>
 import parseAPNG from 'apng-js';
+import { fabric } from "fabric";
 import { onMounted, ref } from 'vue';
 const containerCanvasWidth = ref();
 const containerCanvasHeight = ref();
@@ -62,6 +63,18 @@ const getImage = () => {
     const ctxConcat = canvasConcat.getContext("2d");
     ctxConcat.drawImage(imageWrap, 0, 0, canvas.width, canvas.height);
   }
+  const canvasStamp = document.querySelector("#canvasStamp");
+  const linkStamp = document.createElement('a');
+  linkStamp.href = canvasStamp.toDataURL();
+  //linkWrap.download = 'export_image_wrap.png';
+  //linkWrap.click();
+  const imageStamp = new Image();
+  imageStamp.src = linkStamp;
+  imageStamp.onload = () => {
+    const canvasConcat = document.querySelector("#canvasConcat");
+    const ctxConcat = canvasConcat.getContext("2d");
+    ctxConcat.drawImage(imageStamp, 0, 0, canvas.width, canvas.height);
+  }
 
 }
 const fileSelected = (event) => {
@@ -93,13 +106,18 @@ const position = (event) => {
 const frameStop = () => {
   console.log("ここ", player);
 };
-//canvasStamp
+//スタンプ：canvasStamp 
 const onStamp = () => {
-  let imgStamp = new Image();
+  const imgStamp = new Image();
+  const canvasStamp = new fabric.Canvas("canvasStamp");
   imgStamp.onload = function () {
-    let canvasStamp = document.querySelector('#canvasStamp');
-    let ctxStamp = canvasStamp.getContext('2d');
-    ctxStamp.drawImage(imgStamp, 0, 0);
+    //image
+    fabric.Image.fromURL(imgStamp.src, function (oImg) {
+      oImg.scale(1);
+      canvasStamp.add(oImg);
+      oImg.hasBorders = true;//枠線をなくす
+      oImg.hasControls = true;//枠線の□をなくす
+    });
   }
   imgStamp.src = "/supplepentan-favicon.png"
 
@@ -109,16 +127,22 @@ const onStamp = () => {
   {{ clientWidth }}
   <div>
     <div id="containerCanvas" class="grid grid-cols-2 gap-4 py-2">
-      <div class="relative flex justify-center py-2">
-        <canvas v-bind:width="width / 3" v-bind:height="width / 3" class="absolute rounded ring-2"
-          id="canvasMain"></canvas>
-        <canvas v-bind:width="width / 3" v-bind:height="width / 3" class="absolute rounded ring-2" id="canvasPhotoframe"
-          v-on:mousemove="position"></canvas>
-        <canvas v-bind:width="width / 3" v-bind:height="width / 3" class="absolute rounded ring-2"
-          id="canvasStamp"></canvas>
+      <div>
+        <h1 class="text-center">Real Time</h1>
+        <div class="relative flex justify-center py-2">
+          <canvas v-bind:width="width / 3" v-bind:height="width / 3" class="absolute rounded ring-4"
+            id="canvasMain"></canvas>
+          <canvas v-bind:width="width / 3" v-bind:height="width / 3" class="absolute rounded ring-4"
+            id="canvasPhotoframe" v-on:mousemove="position"></canvas>
+          <canvas v-bind:width="width / 3" v-bind:height="width / 3" class="absolute rounded ring-4"
+            id="canvasStamp"></canvas>
+        </div>
       </div>
-      <div class="flex justify-center py-2">
-        <canvas v-bind:width="width / 3" v-bind:height="width / 3" class="rounded ring-2" id="canvasConcat"></canvas>
+      <div>
+        <h1 class="text-center">Capture</h1>
+        <div class="flex justify-center py-2">
+          <canvas v-bind:width="width / 3" v-bind:height="width / 3" class="rounded ring-4" id="canvasConcat"></canvas>
+        </div>
       </div>
     </div>
   </div>
