@@ -12,6 +12,7 @@ const canvasPhotoframe = ref();
 const ctxPhotoframe = ref();
 const photoFrame_x = ref();
 const photoFrame_y = ref();
+let cameraFacing = false;
 onMounted(() => {
   containerCanvasWidth.value = document.getElementById("containerCanvas").clientWidth;
   containerCanvasHeight.value = document.getElementById("containerCanvas").clientHeight;
@@ -19,7 +20,7 @@ onMounted(() => {
   //webcamera
   const video = document.getElementById("video")
   navigator.mediaDevices.getUserMedia({
-    video: true,
+    video: { facingMode: "environment" },
     audio: false,
   }).then(stream => {
     video.srcObject = stream;
@@ -35,7 +36,8 @@ onMounted(() => {
     requestAnimationFrame(_canvasUpdate);
   };
   _canvasUpdate();
-  const { clientWidth, clientHeight } = containerCanvas.value;
+  const { clientWidth } = containerCanvasWidth;
+  const { clientHeight } = containerCanvasHeight;
   console.log("ここ", clientWidth, clientHeight);
 })
 const getImage = () => {
@@ -84,10 +86,14 @@ const fileSelected = (event) => {
     canvasPhotoframe.value = document.querySelector('#canvasPhotoframe');
     ctxPhotoframe.value = canvasPhotoframe.value.getContext('2d');
     apng.value = parseAPNG(reader.result);
-    apng.value.getPlayer(ctxPhotoframe.value, true);
-    for (let item in apng.value.frames) {
-      frameNum.value[frameNum.value.length] = URL.createObjectURL(apng.value.frames[item].imageData)
+    if (apng.value instanceof Error) {
+      // handle error
+    }else{
+      apng.value.getPlayer(ctxPhotoframe.value, true);
     }
+    // for (let item in apng.value.frames) {
+    //   frameNum.value[frameNum.value.length] = URL.createObjectURL(apng.value.frames[item].imageData)
+    // }
   }
   reader.readAsArrayBuffer(file);
 };
@@ -105,6 +111,26 @@ const position = (event) => {
 };
 const frameStop = () => {
   console.log("ここ", player);
+};
+// カメラ切り替え
+const changeCamera = (event) => {
+  event.preventDefault();
+  let video = document.getElementById("video")
+  let mode = cameraFacing ? "environment" : "user";
+  // Android Chromeでは、セッションを一時停止しないとエラーが出ることがある
+  stopStreamedVideo(video);
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: mode } })
+    .then(stream => video.srcObject = stream)
+    // .catch(err => alert(`${err.name} ${err.message}`));
+  cameraFacing = !cameraFacing;
+};
+const stopStreamedVideo = (video) => {
+    let stream = video.srcObject;
+    let tracks = stream.getTracks();
+    tracks.forEach(function(track) {
+        track.stop();
+    });
+    video.srcObject = null;
 };
 //スタンプ：canvasStamp 
 const onStamp = () => {
@@ -130,18 +156,18 @@ const onStamp = () => {
       <div>
         <h1 class="text-center">Real Time</h1>
         <div class="relative flex justify-center py-2">
-          <canvas v-bind:width="width / 3" v-bind:height="width / 3" class="absolute rounded ring-4"
+          <canvas v-bind:width="width / 3" v-bind:height="height / 3" class="absolute rounded ring-4"
             id="canvasMain"></canvas>
-          <canvas v-bind:width="width / 3" v-bind:height="width / 3" class="absolute rounded ring-4"
+          <canvas v-bind:width="width / 3" v-bind:height="height / 3" class="absolute rounded ring-4"
             id="canvasPhotoframe" v-on:mousemove="position"></canvas>
-          <canvas v-bind:width="width / 3" v-bind:height="width / 3" class="absolute rounded ring-4"
+          <canvas v-bind:width="width / 3" v-bind:height="height / 3" class="absolute rounded ring-4"
             id="canvasStamp"></canvas>
         </div>
       </div>
       <div>
         <h1 class="text-center">Capture</h1>
         <div class="flex justify-center py-2">
-          <canvas v-bind:width="width / 3" v-bind:height="width / 3" class="rounded ring-4" id="canvasConcat"></canvas>
+          <canvas v-bind:width="width / 3" v-bind:height="height / 3" class="rounded ring-4" id="canvasConcat"></canvas>
         </div>
       </div>
     </div>
@@ -183,12 +209,15 @@ const onStamp = () => {
     <button type="button" class="flex-1 block p-2 rounded bg-neutral-200 ring-2" @click="frameStop">
       <p>STOP</p>
     </button>
+    <button type="button" class="flex-1 block p-2 rounded bg-neutral-200 ring-2" @click="changeCamera">
+      <p>changeCamera</p>
+    </button>
   </div>
   <div>
     <p>X: {{ photoFrame_x }} Y: {{ photoFrame_y }}</p>
   </div>
   <div class="invisible">
-    <video id="video"></video>
+    <video id="video" autoplay playsinline="true"></video>
   </div>
 </template>
 <style scoped>
