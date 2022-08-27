@@ -14,8 +14,6 @@ var canvasPhotoframe;
 var ctxPhotoframe;
 var canvasStamp;
 
-var image;
-
 onMounted(() => {
   //canvasのdomとctx
   //video
@@ -47,36 +45,18 @@ onMounted(() => {
 })
 //cannvas画像を合成してcaptureに描画
 const concatImage = () => {
-  const canvas = document.getElementById("canvasVideo");
-  const link = document.createElement('a');
-  link.href = canvas.toDataURL();
-  const image = new Image();
-  image.src = link;
-  image.onload = () => {
-    const canvasConcat = document.getElementById("canvasConcat");
-    const ctxConcat = canvasConcat.getContext("2d");
-    ctxConcat.drawImage(image, 0, 0, canvas.width, canvas.height);
+  let canvasList = [canvasVideo, canvasPhotoframe, canvasStamp];
+  for (let i = 0; i < canvasList.length; ++i) {
+    let link = document.createElement('a');
+    link.href = canvasList[i].toDataURL();
+    let image = new Image();
+    image.src = link;
+    image.onload = () => {
+      const canvasConcat = document.getElementById("canvasConcat");
+      const ctxConcat = canvasConcat.getContext("2d");
+      ctxConcat.drawImage(image, 0, 0, canvasWidth, canvasHeight);
+    }
   }
-  canvasPhotoframe = document.getElementById("canvasPhotoframe");
-  const linkWrap = document.createElement('a');
-  linkWrap.href = canvasPhotoframe.toDataURL();
-  const imageWrap = new Image();
-  imageWrap.src = linkWrap;
-  imageWrap.onload = () => {
-    const canvasConcat = document.getElementById("canvasConcat");
-    const ctxConcat = canvasConcat.getContext("2d");
-    ctxConcat.drawImage(imageWrap, 0, 0, canvas.width, canvas.height);
-  }
-  const linkStamp = document.createElement('a');
-  linkStamp.href = canvasStamp.toDataURL();
-  const imageStamp = new Image();
-  imageStamp.src = linkStamp;
-  imageStamp.onload = () => {
-    const canvasConcat = document.getElementById("canvasConcat");
-    const ctxConcat = canvasConcat.getContext("2d");
-    ctxConcat.drawImage(imageStamp, 0, 0, canvas.width, canvas.height);
-  }
-
 }
 //pngファイル(photoframe)を読み込みcanvasに描画
 const fileSelected = (event) => {
