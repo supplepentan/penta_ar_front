@@ -13,6 +13,8 @@ var ctxVideo;
 var canvasPhotoframe;
 var ctxPhotoframe;
 var canvasStamp;
+var canvasConcat;
+var ctxConcat;
 
 onMounted(() => {
   //canvasのdomとctx
@@ -24,6 +26,9 @@ onMounted(() => {
   ctxPhotoframe = canvasPhotoframe.getContext('2d');
   //stamp
   canvasStamp = document.querySelector("#canvasStamp");
+  //concat
+  canvasConcat = document.getElementById("canvasConcat");
+  ctxConcat = canvasConcat.getContext("2d");
 
   //ウェブカメラ映像をvideoに描写（インビジブル）
   video = document.getElementById("video")
@@ -52,8 +57,6 @@ const concatImage = () => {
     let image = new Image();
     image.src = link;
     image.onload = () => {
-      const canvasConcat = document.getElementById("canvasConcat");
-      const ctxConcat = canvasConcat.getContext("2d");
       ctxConcat.drawImage(image, 0, 0, canvasWidth, canvasHeight);
     }
   }
@@ -70,7 +73,6 @@ const fileSelected = (event) => {
 };
 //capture画像をダウンロード
 const download = () => {
-  const canvasConcat = document.getElementById("canvasConcat");
   const linkConcat = document.createElement('a');
   linkConcat.href = canvasConcat.toDataURL();
   linkConcat.download = 'export_image_wrap.png';
