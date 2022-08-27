@@ -14,6 +14,7 @@ var canvasPhotoframe;
 var ctxPhotoframe;
 var canvasStamp;
 var ctxStamp;
+var canvasStampFab;
 var canvasConcat;
 var ctxConcat;
 let cameraFacing = false;
@@ -29,6 +30,7 @@ onMounted(() => {
   //stamp
   canvasStamp = document.querySelector("#canvasStamp");
   ctxStamp = canvasStamp.getContext('2d');
+  canvasStampFab = new fabric.Canvas("canvasStamp");
   //concat
   canvasConcat = document.getElementById("canvasConcat");
   ctxConcat = canvasConcat.getContext("2d");
@@ -86,12 +88,11 @@ const frameStop = () => {
 //スタンプ：canvasStamp 
 const onStamp = () => {
   const imgStamp = new Image();
-  const canvasStamp = new fabric.Canvas("canvasStamp");
   imgStamp.onload = function () {
     //image
     fabric.Image.fromURL(imgStamp.src, function (oImg) {
       oImg.scale(1);
-      canvasStamp.add(oImg);
+      canvasStampFab.add(oImg);
       oImg.hasBorders = true;//枠線をなくす
       oImg.hasControls = true;//枠線の□をなくす
     });
