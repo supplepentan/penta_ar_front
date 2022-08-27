@@ -16,6 +16,7 @@ var canvasStamp;
 var ctxStamp;
 var canvasConcat;
 var ctxConcat;
+let cameraFacing = false;
 
 onMounted(() => {
   //canvasのdomとctx
@@ -35,7 +36,7 @@ onMounted(() => {
   //ウェブカメラ映像をvideoに描写（インビジブル）
   video = document.getElementById("video")
   navigator.mediaDevices.getUserMedia({
-    video: true,
+    video: { facingMode: "environment" },
     audio: false,
   }).then(stream => {
     video.srcObject = stream;
@@ -62,8 +63,12 @@ const fileSelected = (event) => {
   var file = event.target.files[0];
   var reader = new FileReader();
   reader.onload = () => {
-    apng = parseAPNG(reader.result);
-    apng.getPlayer(ctxPhotoframe, true);
+    apng = parseAPNG(reader.result);;
+    if (apng instanceof Error) {
+      // handle error
+    } else {
+      apng.getPlayer(ctxPhotoframe, true);
+    }
   }
   reader.readAsArrayBuffer(file);
 };
@@ -92,8 +97,27 @@ const onStamp = () => {
     });
   }
   imgStamp.src = "/supplepentan-favicon.png"
-
-}
+};
+// カメラ切り替え
+const changeCamera = (event) => {
+  event.preventDefault();
+  let video = document.getElementById("video")
+  let mode = cameraFacing ? "environment" : "user";
+  // Android Chromeでは、セッションを一時停止しないとエラーが出ることがある
+  stopStreamedVideo(video);
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: mode } })
+    .then(stream => video.srcObject = stream)
+  // .catch(err => alert(`${err.name} ${err.message}`));
+  cameraFacing = !cameraFacing;
+};
+const stopStreamedVideo = (video) => {
+  let stream = video.srcObject;
+  let tracks = stream.getTracks();
+  tracks.forEach(function (track) {
+    track.stop();
+  });
+  video.srcObject = null;
+};
 </script>
 <template>
   <div>
@@ -154,9 +178,12 @@ const onStamp = () => {
     <button type="button" class="flex-1 classButton" v-on:click="frameStop">
       <p>STOP</p>
     </button>
+    <button type="button" class="flex-1 classButton" v-on:click="changeCamera">
+      <p>changeCamera</p>
+    </button>
   </div>
   <div class="invisible">
-    <video id="video"></video>
+    <video id="video" autoplay playsinline="true"></video>
   </div>
 </template>
 <style scoped>
