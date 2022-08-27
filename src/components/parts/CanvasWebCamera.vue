@@ -1,21 +1,19 @@
 <script setup>
-import parseAPNG from 'apng-js';
+import parseAPNG from "apng-js";
 import { fabric } from "fabric";
-import { onMounted, ref } from 'vue';
+import { onMounted, ref } from "vue";
+
 const containerCanvasWidth = ref();
 const containerCanvasHeight = ref();
-const width = ref(window.innerWidth); //ブラウザの横の長さ
-const height = ref(window.innerHeight);
+const canvasWidth = (window.innerWidth / 3); //Canvasの横の長さ
+const canvasHeight = (window.innerHeight / 2); //Canvasの縦の長さ
 const apng = ref();
 var player = null;
 const canvasPhotoframe = ref();
 const ctxPhotoframe = ref();
-const photoFrame_x = ref();
-const photoFrame_y = ref();
 onMounted(() => {
   containerCanvasWidth.value = document.getElementById("containerCanvas").clientWidth;
   containerCanvasHeight.value = document.getElementById("containerCanvas").clientHeight;
-  console.log(containerCanvas);
   //webcamera
   const video = document.getElementById("video")
   navigator.mediaDevices.getUserMedia({
@@ -28,80 +26,68 @@ onMounted(() => {
     console.log(e)
   })
   // canvasにvideo要素の映像をcanvasに描画する
-  const canvas = document.querySelector('#canvasMain');
+  const canvas = document.getElementById("canvasVideo");
   const ctx = canvas.getContext('2d');
   function _canvasUpdate() {
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     requestAnimationFrame(_canvasUpdate);
   };
   _canvasUpdate();
-  const { clientWidth, clientHeight } = containerCanvas.value;
-  console.log("ここ", clientWidth, clientHeight);
 })
+//cannvas画像を合成してcaptureに描画
 const getImage = () => {
-  const canvas = document.querySelector("#canvasMain");
+  const canvas = document.getElementById("canvasVideo");
   const link = document.createElement('a');
   link.href = canvas.toDataURL();
-  //link.download = 'export_image.png';
-  //link.click();
   const image = new Image();
   image.src = link;
   image.onload = () => {
-    const canvasConcat = document.querySelector("#canvasConcat");
+    const canvasConcat = document.getElementById("canvasConcat");
     const ctxConcat = canvasConcat.getContext("2d");
     ctxConcat.drawImage(image, 0, 0, canvas.width, canvas.height);
   }
-  canvasPhotoframe.value = document.querySelector("#canvasPhotoframe");
+  canvasPhotoframe.value = document.getElementById("canvasPhotoframe");
   const linkWrap = document.createElement('a');
   linkWrap.href = canvasPhotoframe.value.toDataURL();
-  //linkWrap.download = 'export_image_wrap.png';
-  //linkWrap.click();
   const imageWrap = new Image();
   imageWrap.src = linkWrap;
   imageWrap.onload = () => {
-    const canvasConcat = document.querySelector("#canvasConcat");
+    const canvasConcat = document.getElementById("canvasConcat");
     const ctxConcat = canvasConcat.getContext("2d");
     ctxConcat.drawImage(imageWrap, 0, 0, canvas.width, canvas.height);
   }
   const canvasStamp = document.querySelector("#canvasStamp");
   const linkStamp = document.createElement('a');
   linkStamp.href = canvasStamp.toDataURL();
-  //linkWrap.download = 'export_image_wrap.png';
-  //linkWrap.click();
   const imageStamp = new Image();
   imageStamp.src = linkStamp;
   imageStamp.onload = () => {
-    const canvasConcat = document.querySelector("#canvasConcat");
+    const canvasConcat = document.getElementById("canvasConcat");
     const ctxConcat = canvasConcat.getContext("2d");
     ctxConcat.drawImage(imageStamp, 0, 0, canvas.width, canvas.height);
   }
 
 }
+//pngファイル(photoframe)を読み込みcanvasに描画
 const fileSelected = (event) => {
   var file = event.target.files[0];
   var reader = new FileReader();
   reader.onload = () => {
-    canvasPhotoframe.value = document.querySelector('#canvasPhotoframe');
+    canvasPhotoframe.value = document.getElementById('canvasPhotoframe');
     ctxPhotoframe.value = canvasPhotoframe.value.getContext('2d');
     apng.value = parseAPNG(reader.result);
     apng.value.getPlayer(ctxPhotoframe.value, true);
-    for (let item in apng.value.frames) {
-      frameNum.value[frameNum.value.length] = URL.createObjectURL(apng.value.frames[item].imageData)
-    }
   }
   reader.readAsArrayBuffer(file);
 };
+//capture画像をダウンロード
 const download = () => {
-  const canvasConcat = document.querySelector("#canvasConcat");
+  const canvasConcat = document.getElementById("canvasConcat");
   const linkConcat = document.createElement('a');
   linkConcat.href = canvasConcat.toDataURL();
   linkConcat.download = 'export_image_wrap.png';
   linkConcat.click();
 
-};
-const position = (event) => {
-  photoFrame_x.value = event.screenX;
-  photoFrame_y.value = event.screenY
 };
 const frameStop = () => {
   console.log("ここ", player);
@@ -124,29 +110,28 @@ const onStamp = () => {
 }
 </script>
 <template>
-  {{ clientWidth }}
   <div>
     <div id="containerCanvas" class="grid grid-cols-2 gap-4 py-2">
       <div>
         <h1 class="text-center">Real Time</h1>
         <div class="relative flex justify-center py-2">
-          <canvas v-bind:width="width / 3" v-bind:height="width / 3" class="absolute rounded ring-4"
-            id="canvasMain"></canvas>
-          <canvas v-bind:width="width / 3" v-bind:height="width / 3" class="absolute rounded ring-4"
+          <canvas v-bind:width="canvasWidth" v-bind:height="canvasHeight" class="absolute rounded ring-4"
+            id="canvasVideo"></canvas>
+          <canvas v-bind:width="canvasWidth" v-bind:height="canvasHeight" class="absolute rounded ring-4"
             id="canvasPhotoframe" v-on:mousemove="position"></canvas>
-          <canvas v-bind:width="width / 3" v-bind:height="width / 3" class="absolute rounded ring-4"
+          <canvas v-bind:width="canvasWidth" v-bind:height="canvasHeight" class="absolute rounded ring-4"
             id="canvasStamp"></canvas>
         </div>
       </div>
       <div>
         <h1 class="text-center">Capture</h1>
         <div class="flex justify-center py-2">
-          <canvas v-bind:width="width / 3" v-bind:height="width / 3" class="rounded ring-4" id="canvasConcat"></canvas>
+          <canvas v-bind:width="canvasWidth" v-bind:height="canvasHeight" class="rounded ring-4"
+            id="canvasConcat"></canvas>
         </div>
       </div>
     </div>
   </div>
-  <div>{{ containerCanvas }}</div>
   <div class="grid grid-cols-2 border-2">
     <div class="p-2 border-2 rounded border-sky-400">
       <p class="text-center">Photoframe</p>
@@ -183,9 +168,6 @@ const onStamp = () => {
     <button type="button" class="flex-1 block p-2 rounded bg-neutral-200 ring-2" @click="frameStop">
       <p>STOP</p>
     </button>
-  </div>
-  <div>
-    <p>X: {{ photoFrame_x }} Y: {{ photoFrame_y }}</p>
   </div>
   <div class="invisible">
     <video id="video"></video>
