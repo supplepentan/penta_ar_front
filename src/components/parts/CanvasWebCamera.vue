@@ -1,21 +1,34 @@
 <script setup>
 import parseAPNG from "apng-js";
 import { fabric } from "fabric";
-import { onMounted, ref } from "vue";
+import { onMounted } from "vue";
 
-const containerCanvasWidth = ref();
-const containerCanvasHeight = ref();
 const canvasWidth = (window.innerWidth / 3); //Canvasの横の長さ
 const canvasHeight = (window.innerHeight / 2); //Canvasの縦の長さ
-const apng = ref();
+var apng;
+var video;
 var player = null;
-const canvasPhotoframe = ref();
-const ctxPhotoframe = ref();
+var canvasVideo;
+var ctxVideo;
+var canvasPhotoframe;
+var ctxPhotoframe;
+var canvasStamp;
+
+var image;
+
 onMounted(() => {
-  containerCanvasWidth.value = document.getElementById("containerCanvas").clientWidth;
-  containerCanvasHeight.value = document.getElementById("containerCanvas").clientHeight;
-  //webcamera
-  const video = document.getElementById("video")
+  //canvasのdomとctx
+  //video
+  canvasVideo = document.getElementById("canvasVideo");
+  ctxVideo = canvasVideo.getContext('2d');
+  //photoframe
+  canvasPhotoframe = document.getElementById('canvasPhotoframe');
+  ctxPhotoframe = canvasPhotoframe.getContext('2d');
+  //stamp
+  canvasStamp = document.querySelector("#canvasStamp");
+
+  //ウェブカメラ映像をvideoに描写（インビジブル）
+  video = document.getElementById("video")
   navigator.mediaDevices.getUserMedia({
     video: true,
     audio: false,
@@ -26,16 +39,14 @@ onMounted(() => {
     console.log(e)
   })
   // canvasにvideo要素の映像をcanvasに描画する
-  const canvas = document.getElementById("canvasVideo");
-  const ctx = canvas.getContext('2d');
   function _canvasUpdate() {
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    ctxVideo.drawImage(video, 0, 0, canvasWidth, canvasHeight);
     requestAnimationFrame(_canvasUpdate);
   };
   _canvasUpdate();
 })
 //cannvas画像を合成してcaptureに描画
-const getImage = () => {
+const concatImage = () => {
   const canvas = document.getElementById("canvasVideo");
   const link = document.createElement('a');
   link.href = canvas.toDataURL();
@@ -46,9 +57,9 @@ const getImage = () => {
     const ctxConcat = canvasConcat.getContext("2d");
     ctxConcat.drawImage(image, 0, 0, canvas.width, canvas.height);
   }
-  canvasPhotoframe.value = document.getElementById("canvasPhotoframe");
+  canvasPhotoframe = document.getElementById("canvasPhotoframe");
   const linkWrap = document.createElement('a');
-  linkWrap.href = canvasPhotoframe.value.toDataURL();
+  linkWrap.href = canvasPhotoframe.toDataURL();
   const imageWrap = new Image();
   imageWrap.src = linkWrap;
   imageWrap.onload = () => {
@@ -56,7 +67,6 @@ const getImage = () => {
     const ctxConcat = canvasConcat.getContext("2d");
     ctxConcat.drawImage(imageWrap, 0, 0, canvas.width, canvas.height);
   }
-  const canvasStamp = document.querySelector("#canvasStamp");
   const linkStamp = document.createElement('a');
   linkStamp.href = canvasStamp.toDataURL();
   const imageStamp = new Image();
@@ -73,10 +83,8 @@ const fileSelected = (event) => {
   var file = event.target.files[0];
   var reader = new FileReader();
   reader.onload = () => {
-    canvasPhotoframe.value = document.getElementById('canvasPhotoframe');
-    ctxPhotoframe.value = canvasPhotoframe.value.getContext('2d');
-    apng.value = parseAPNG(reader.result);
-    apng.value.getPlayer(ctxPhotoframe.value, true);
+    apng = parseAPNG(reader.result);
+    apng.getPlayer(ctxPhotoframe, true);
   }
   reader.readAsArrayBuffer(file);
 };
@@ -89,8 +97,8 @@ const download = () => {
   linkConcat.click();
 
 };
+//stopボタン：現在設定なし
 const frameStop = () => {
-  console.log("ここ", player);
 };
 //スタンプ：canvasStamp 
 const onStamp = () => {
@@ -115,18 +123,18 @@ const onStamp = () => {
       <div>
         <h1 class="text-center">Real Time</h1>
         <div class="relative flex justify-center py-2">
-          <canvas v-bind:width="canvasWidth" v-bind:height="canvasHeight" class="absolute rounded ring-4"
+          <canvas v-bind:width="canvasWidth" v-bind:height="canvasHeight" class="absolute classCanvas"
             id="canvasVideo"></canvas>
-          <canvas v-bind:width="canvasWidth" v-bind:height="canvasHeight" class="absolute rounded ring-4"
+          <canvas v-bind:width="canvasWidth" v-bind:height="canvasHeight" class="absolute classCanvas"
             id="canvasPhotoframe" v-on:mousemove="position"></canvas>
-          <canvas v-bind:width="canvasWidth" v-bind:height="canvasHeight" class="absolute rounded ring-4"
+          <canvas v-bind:width="canvasWidth" v-bind:height="canvasHeight" class="absolute classCanvas"
             id="canvasStamp"></canvas>
         </div>
       </div>
       <div>
         <h1 class="text-center">Capture</h1>
         <div class="flex justify-center py-2">
-          <canvas v-bind:width="canvasWidth" v-bind:height="canvasHeight" class="rounded ring-4"
+          <canvas v-bind:width="canvasWidth" v-bind:height="canvasHeight" class="classCanvas"
             id="canvasConcat"></canvas>
         </div>
       </div>
@@ -145,7 +153,7 @@ const onStamp = () => {
     </div>
   </div>
   <div class="flex items-stretch">
-    <button type="button" class="flex-1 block p-2 rounded bg-neutral-200 ring-2" @click="getImage">
+    <button type="button" class="flex-1 classButton" v-on:click="concatImage">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-camera"
         viewBox="0 0 16 16">
         <path
@@ -155,7 +163,7 @@ const onStamp = () => {
       </svg>
       <p>Capture</p>
     </button>
-    <button type="button" class="flex-1 block p-2 rounded bg-neutral-200 ring-2" @click="download">
+    <button type="button" class="flex-1 classButton" v-on:click="download">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-arrow-down"
         viewBox="0 0 16 16">
         <path fill-rule="evenodd"
@@ -165,7 +173,7 @@ const onStamp = () => {
       </svg>
       <p>Download</p>
     </button>
-    <button type="button" class="flex-1 block p-2 rounded bg-neutral-200 ring-2" @click="frameStop">
+    <button type="button" class="flex-1 classButton" v-on:click="frameStop">
       <p>STOP</p>
     </button>
   </div>
@@ -174,4 +182,11 @@ const onStamp = () => {
   </div>
 </template>
 <style scoped>
+.classCanvas {
+  @apply rounded ring-4
+}
+
+.classButton {
+  @apply block p-2 rounded bg-neutral-200 ring-2;
+}
 </style>
