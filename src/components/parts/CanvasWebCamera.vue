@@ -13,6 +13,7 @@ var ctxVideo;
 var canvasPhotoframe;
 var ctxPhotoframe;
 var canvasStamp;
+var ctxStamp;
 var canvasConcat;
 var ctxConcat;
 
@@ -26,6 +27,7 @@ onMounted(() => {
   ctxPhotoframe = canvasPhotoframe.getContext('2d');
   //stamp
   canvasStamp = document.querySelector("#canvasStamp");
+  ctxStamp = canvasStamp.getContext('2d');
   //concat
   canvasConcat = document.getElementById("canvasConcat");
   ctxConcat = canvasConcat.getContext("2d");
@@ -52,13 +54,7 @@ onMounted(() => {
 const concatImage = () => {
   let canvasList = [canvasVideo, canvasPhotoframe, canvasStamp];
   for (let i = 0; i < canvasList.length; ++i) {
-    let link = document.createElement('a');
-    link.href = canvasList[i].toDataURL();
-    let image = new Image();
-    image.src = link;
-    image.onload = () => {
-      ctxConcat.drawImage(image, 0, 0, canvasWidth, canvasHeight);
-    }
+    ctxConcat.drawImage(canvasList[i], 0, 0, canvasWidth, canvasHeight);
   }
 }
 //pngファイル(photoframe)を読み込みcanvasに描画
