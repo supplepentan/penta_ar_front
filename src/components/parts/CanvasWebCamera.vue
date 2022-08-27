@@ -55,6 +55,10 @@ onMounted(() => {
 })
 //cannvas画像を合成してcaptureに描画
 const concatImage = () => {
+  //fabricのアクティブを解除
+  canvasStampFab.discardActiveObject();
+  canvasStampFab.renderAll();
+  //3つのcanvasをconcatcanvasに順次描画
   let canvasList = [canvasVideo, canvasPhotoframe, canvasStamp];
   for (let i = 0; i < canvasList.length; ++i) {
     ctxConcat.drawImage(canvasList[i], 0, 0, canvasWidth, canvasHeight);
